@@ -1,0 +1,36 @@
+#  Diagram is updated each time you save this file ( Ctrl-s ).  
+
+digraph G {
+	margin=0.1;
+	node[ fontsize=15 ];
+	node[ shape=box, style=filled; fillcolor=skyblue, width=1.2, height=0.9 ];    
+	{ rank=same; 
+		Rst[group=g0,fillcolor=salmon] ; Docx [group=g1,fillcolor=salmon] 
+	}
+	{ rank=same; 
+		Md[group=g0,fillcolor=salmon]  ; pandoc ; AST1 ; filter[fillcolor=cornsilk] ; 
+		AST2 ; pandoc2;  Html[group=g1,fillcolor=salmon] 
+	}
+	{ rank=same; 
+		Tex[group=g0,fillcolor=salmon] ;   Pdf[group=g1,fillcolor=salmon]; filters[fillcolor=cornsilk]; 
+	}
+  node[fillcolor=cornsilk]; 
+  { rank=same; dot ; eqn; mtex; pic; pik; rplot; tsvg;}
+  Rst -> pandoc -> AST1 -> filter -> AST2 -> pandoc2 -> Html ;
+  Md -> pandoc;
+  Tex -> pandoc;
+  Rst -> Md -> Tex -> dot[style=invis] ;
+  pandoc2 -> Docx;
+  pandoc2 -> Pdf ;
+  Docx -> Html -> Pdf -> tsvg[style=invis];
+  pandoc2[label=pandoc];
+  filter[label="pandoc-\ntcl-\nfilter"];
+  filter->filters;
+  filters -> dot ;
+  filters -> eqn ;
+  filters -> mtex;
+  filters -> pic ;
+  filters -> pik ; 
+  filters -> rplot;
+  filters -> tsvg;
+}

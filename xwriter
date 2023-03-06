@@ -1,0 +1,425 @@
+#!/usr/bin/wish
+
+
+#==  LOAD PACKAGE/LIBRARIES
+set ScriptPath [ file dirname [ file normalize [ info script ] ] ];  # Set script Path
+lappend auto_path "$ScriptPath/lib64";  	# Add library folder to search path
+package require Tk;								# Main Widget Package
+package require fileutil;
+package require md5;
+catch {package require Img};   # For arch, package libtk-img not available
+catch {package require tksvg}; # For tk<8.7, image svg  WITHOUT text (icon)
+
+#==   INIT GLOBAL VARIABLE  BEFORE PLUGIN
+set FileName [ file normalize [lindex $argv 0]]; # if call 'xwriter <fileName>'
+set FilePath "$::env(HOME)/Documents";			# Initial Path for loading/Saving files
+set wordWrap word;						# none=no wrap, word=wrap text
+set HideSyntax 1;							# Hide markdown symbol at startup
+set BackupText "";						# Cache to store text widget. Do not change
+set ConfPath "$::env(HOME)/.config/xwriter/"
+set ConfFile "$ConfPath/config"
+set PandocExtensions ""
+set FileExtension .md;  				# markdown syntax for 'Untitled' at start 
+set status "  F1: View Help"
+set env(FILTEREVAL) 0;  	# Disable pantcl 'tcl' block evaluation (bugs)
+if { [auto_execok pandoc] ne "" } { set PandocMissing false } else { set PandocMissing true }
+if { [auto_execok lowdown] ne "" } { set LowdownMissing false} else { set LowdownMissing true }
+if { [auto_execok dot] ne "" } { set GraphvizMissing false } else { set GraphvizMissing true }
+
+#==  INIT
+frame .fr ;														# Define Main window
+text .fr.t; ttk::treeview .fr.tr;						# Define Widgets
+
+#--  CREATE CONFIG DIRECTORY/FILES IF NON-EXIST
+file mkdir $ConfPath "$::env(HOME)/.pandoc/"  "$::env(HOME)/.pandoc/filters/"
+catch { file copy  "$ScriptPath/config" $ConfFile };  # Copy default if non-exist
+catch { file copy -- "$ScriptPath/theme.tcl" $ConfPath }
+catch { file copy -- "$ScriptPath/export.css" $ConfPath }
+catch { file copy -- "$ScriptPath/dict.en.pws" $ConfPath  }
+catch { file copy -- "$ScriptPath/symbol.md" $ConfPath  }
+catch { file copy -- "$ScriptPath/pandoc/reference.docx" "$::env(HOME)/.pandoc"  }
+catch { file copy -- "$ScriptPath/pandoc/reference.odt" "$::env(HOME)/.pandoc" }
+catch { file copy -- "$ScriptPath/pandoc/test.lua" "$::env(HOME)/.pandoc/filters" }
+
+#--  Define Space/Tab width  ( Before loading theme )
+proc SetTabWidth { FontFamily } {
+	set ::TabWidth [expr {3 * [font measure $FontFamily "0"]} ]
+	set ::SpaceWidth [font measure $FontFamily " " ];	# Width of one space
+	.fr.t configure -tabs $::TabWidth
+}
+
+#--  Load User-Defined Config
+source $ConfPath/config;				# Load User-defined config file 
+SetTabWidth TextFont;					# Define Tab/Space width ( used in theme.tcl )
+source $ConfPath/theme.tcl;			# Load User-defined theme file 
+
+
+#--  Define at least 1 pandoc option if empty/undefined in config file (Error if no Options)
+if { ! [ info exists PandocOptions] || $PandocOptions eq "" } {
+	set PandocOptions "--dpi=96"
+}
+
+#==  LOAD ESSENTIAL FILES & PLUGIN
+foreach f [glob -directory "$::ScriptPath/" -- "*.tcl"] { source $f }
+foreach f [glob -directory "$::ScriptPath/plugin" -- "*.tcl"] { source $f }
+
+
+#==  LOAD TOOLBAR  ( Last One: Toolbar config depends on other plugins )
+source $ScriptPath/toolbar;		# Load Toolbar
+
+
+#==  DEFINE WINDOW AND WIDGET GEOMETRY. CENTER WINDOW
+#set width 1360; set height 768
+#set x [expr { ( [winfo vrootwidth  .] - $width  ) / 2 }]
+#set y [expr { ( [winfo vrootheight .] - $height ) / 2 }]
+#wm minsize . $width $height
+#wm geometry . +${x}+${y}
+if $StartMaximized { wm attributes . -zoomed $StartMaximized } ;#true: window maximized
+set TextWidth [expr [winfo vrootwidth  .]*$TextWindowWidth/100 ]
+set TextPadX  [expr ([winfo vrootwidth  .]-$TextWidth)/2 ]
+
+#==   DIALOG BOX
+option add *Dialog.msg.wrapLength 1000;		# Wrap length in point
+option add *Dialog.msg.font DefaultFont;		# Font on msg and buttons
+
+#==  DIALOG BUTTON
+#ttk::style configure TButton -relief solid -background #d9d9d9; # message button
+#option add *Button.relief  solid;  # dialog button
+
+
+#==   MAIN DEFAULT FONT (Menu, Dialog Box...)
+set DefaultFontFamily [ font actual DefaultFont -family ]
+set DefaultFontSize [ font actual DefaultFont -size ]
+foreach TkFont { TkDefaultFont TkTextFont TkTooltipFont  TkFixedFont TkIconFont \
+	TkMenuFont TkHeadingFont TkCaptionFont TkSmallCaptionFont } \
+	{ font configure $TkFont -family $DefaultFontFamily -size $DefaultFontSize }
+font create DefaultFontBold   -family DefaultFont -size "$::DefaultFontSize" -weight bold
+
+
+#====   DEFINE  TEXT  WIDGET  AND SCROLLBAR
+.fr.t configure -font TextFont -undo true \
+	-yscrollcommand ".fr.scrollY set"  -xscrollcommand ".fr.scrollX set" \
+	-wrap $wordWrap  -borderwidth 1 -relief groove	-cursor xterm   -insertwidth 3  \
+	-tabs "$TabWidth left" -tabstyle wordprocessor
+scrollbar .fr.scrollY -width 15 -command ".fr.t yview" -background "#a3bfd6" -troughcolor grey90
+scrollbar .fr.scrollX -width 10 -orient horizontal -command ".fr.t xview" -background grey90 -troughcolor #a3bfd6
+
+
+#====   DEFINE  TREEVIEW SCROLLBAR  ( LEFT PANE VIEW )
+.fr.tr configure -yscroll [list .fr.tr.scroll set] -selectmode browse
+scrollbar .fr.tr.scroll -width 8 -orient vertical -command [list .fr.tr yview]
+
+#===    LOAD FONT/THEME   (file theme.tcl)
+SetDefaultFont;  # Load Default Fonts (defined in font.tcl)
+if { ! [ info exists GlobalTheme ] } { set ::GlobalTheme default }
+switch -glob $::GlobalTheme {
+      "default"   { SetTheme_Default;	SetTabWidth "TextFont" }
+      "dark"      { SetTheme_Dark;		SetTabWidth "TextFont"  }
+      "terminal"  { SetTheme_Terminal; SetTabWidth "MonospaceFont" }
+}
+Set_TagPriority;   					# Define Tag priority (Syntax > Sel > ...)
+Set_TagCodePriority;					# Define Tag priority for Code
+
+#-- Load/Pack  Widgets (Text Widget / Left pane Widget if enable )
+proc packWidget { Options } {
+	pack forget .fr.t
+	pack forget .fr.tr
+	pack .fr.scrollX -side bottom  -fill x -expand false;   #bottom scroll bar
+	pack .fr.scrollY -side right -fill y -expand false;	# right scroll bar for text widget
+	if {[string match *LeftPane* $Options]} { 		;# Display also left pane
+		pack .fr.tr -side left  -fill both  -expand false;
+		.fr.tr delete [.fr.tr children {}];   # Delete all items on treeview
+		pack .fr.tr.tb -side bottom -padx 0
+		pack .fr.tr.tb.b1 -side left
+		pack .fr.tr.tb.b2 -side left
+		pack .fr.tr.tb.b3 -side left
+		tooltip .fr.tr.tb.b1 "";    # Reset tooltips
+		tooltip .fr.tr.tb.b2 ""
+		tooltip .fr.tr.tb.b3 ""
+		pack .fr.tr.scroll  -side right -fill y;  # Treeview scrollbar
+		pack forget .fr.scrollX
+	}
+	pack .fr.t -fill both -padx 4 -pady 2 -expand true
+	if {$::PageView eq "portrait" &&  ! [string match *LeftPane* $Options]} {
+				pack .fr.t -fill both -padx $::TextPadX -pady 2 -expand true
+	}
+	focus .fr.t
+	#pack .fr -fill both -expand true ;		# If paned window
+	#--  Do Not change window size if already maximised ( hack for XFCE )
+	if { [ wm attributes . -zoomed] } { pack propagate . false
+	} else {  pack propagate . true }
+}
+pack .fr -fill both -expand true ;		# main frame
+pack .fr.tb -side top -fill x  -padx 0 -pady 0 -expand true;		# Toolbar
+packWidget ""
+
+
+
+#===   ASK USER  ON TOOLBAR/ENTRY WIDGET
+proc AskUser { question } {
+	set ::status "$question";
+	.fr.tb.entry icursor end; # .xx selection range icursor end;   # To preselect text
+	focus .fr.tb.entry
+}
+
+
+#==  ENTRY WIDGET ACTION   ( When cursor on Entry widget and a key is pressed )
+	bind .fr.tb.entry <KeyPress-Escape>  { set ::status ""; focus .fr.t }
+	bind .fr.tb.entry <KeyPress-Return>  {
+		#-- Set arguments and remove leading spaces,tabs,newlines,CR
+		set Split [split $status ":"];				# split Command/argument with ':'
+		foreach id {0 1 2 3} {	set Arg$id  [string trim [lindex $Split $id] ] }
+		#puts "DEBUG ENTRY  Cmd: $Arg0 , Arg1: $Arg1  Arg2: $Arg2  Arg3:$Arg3"
+		switch -glob  [string toupper [lindex $Split 0] ] {
+			"*FIND*"	{ set LastSearch	[SearchStr $Arg2 $Arg3 1.0] }
+			"*GOTO*"	{ set status ""; GoToLine $Arg1 }
+			"*OPEN*"	{ catch { exec $ScriptPath/xwriter $Arg1 & } }
+			"*SPELL*"	{ set status ""; set CheckSpellLanguage [string trim $Arg1]  }
+			"*CONJUGATE*" { set ConjugateVerb $Arg1; InitExtraView "Conjugate" }
+			"*ENTER*URL*" { ImportURL "$Arg1:$Arg2" }
+			"*QUIT*"	{ exit }
+			"*!*"		{;  # Execute commands in terminal.  %i=document name
+							set command [string map {"!" "" "%%i" $::FileName} $status ]
+							set command "cd [file dirname $::FileName]; [subst $command]; bash"
+							#puts "DebugAskUser: Execute <$status>"
+							catch { exec x-terminal-emulator -e bash -c $command & }
+						}
+			default	{ set status "Unknow Command <$Arg0>" }
+		}
+		focus .fr.t
+}
+
+
+#===   GOTO Line/character 
+#        ( User request or When click on URL in TableOfContent )
+proc GoToLine { LineToGo } {
+	.fr.t tag remove sel 0.0 end;							# Remove previous tags 'sel'
+	.fr.t see 1.0 ;							# scroll at first line
+	if [ string match "*c" $LineToGo] {
+		set pos "1.0+[string trimright $LineToGo c]c"
+		.fr.t see $pos
+		.fr.t tag add search $pos $pos+1c
+	} else {
+		.fr.t see $LineToGo.0;				# scroll at position
+		.fr.t mark set insert $LineToGo.0;					# Set insert cursor at line start
+		.fr.t tag add sel $LineToGo.0 $LineToGo.0+1l;	# Select the line
+	}
+}
+
+
+#===   SAVE  FILE  (Or SaveAs)
+proc SaveFile { FileName } {
+	set SaveAs false;   # Not a new file (SaveAs)
+	#-- Save As...  
+	if { $FileName eq "" || [wm title . ] eq "Untitled" } {
+		after idle ForceWindowSize;    # Hack to force window min size
+		set types {		{{All Files} *   }
+    						{{Text}  {.txt}  }
+    						{{HTML}  {.html} }
+    						{{Markdown Archive}  {.mdz} }
+    						{{Markdown Encrypted Archive}  {.mdZ} }
+		}
+		if { [info exists ::PandocOutputTypes] } { append types $::PandocOutputTypes }
+		if { [string match "/tmp*" $::FileName] } { set SaveDir "$::env(HOME)/Documents"
+		} else { set SaveDir $::FilePath }
+		set FileName [ tk_getSaveFile  -initialdir  $SaveDir -filetypes $types ]
+		if { $FileName eq "" } { return } else { set SaveAs true }
+		switch -glob [ file extension $FileName ] {
+      	".mdz"	{ SaveAsArchive [file rootname $FileName].mdz  $::FileName; return  }
+      	".mdZ"	{ SaveAsEncryptedArchive [file rootname $FileName].mdZ  $::FileName; return }
+      	".html"	{ ExportAsHTML $FileName; return }
+         ".pdf" - ".docx" - ".epub" - ".odt" - ".rtf" - ".odf" - ".xml" {
+                     ExportWithPandoc $FileName; return
+						}
+			default { }
+		}
+	}
+	#--  Get Full Text
+	set outfile [open $FileName w ]
+	set data [ .fr.t get 1.0 "end-1c" ]
+  	#--  Replace list symbol • with symbol *
+	if { [ file extension $FileName ] in [list ".md" ".MD" ".mdz" ".mdZ"] } {
+	  	regsub -all -line  {^(\s*)(?:•)(.*?)} $data {\1*\2} data
+	}
+	#-- Save ( regular text file ) 
+	puts -nonewline $outfile $data
+	close $outfile;
+	set ::status " Save: [file tail $FileName]";
+	#--  If not saved as a new file (saveAs), set file status as unmodified
+	if { ! $SaveAs } {
+		set ::FileName $FileName
+		.fr.t edit modified false;	# Set as 'unmodified'. No confirmation when exit app
+	}
+	#-- window title =*mdz/*mdZ ==> Save as a markdock Archive
+	if { [ string match "*.mdz*" [wm title . ] ] || [ string match "*.mdZ*" [wm title . ] ]} {
+		lassign [ split [wm title . ] ">" ] ArchiveName RootFileName
+		SaveAsArchive  [string trim $ArchiveName]  [string trim $RootFileName]
+	}
+	#--  Reload the file if new file (Untitled)
+	if { [wm title . ] eq "Untitled" } { LoadFile $FileName "Backup" }
+}
+
+
+#===   LOAD  FILE
+#    Option = "" or NoBackUp (cache file before loading another one)
+proc LoadFile { FileName Options } {
+	#--  Open DialogBox if no filename defined
+	if { $FileName eq "" } {
+		set types {	{{All Files} *}  {{Markdown Files}  { .md .MD .mdz .mdZ} }  }
+		TreeViewClose;															# Close treeview/Left pane if exist ( if stay open, loaded file not put in recent list )
+		after idle ForceWindowSize;    # Hack to force window min size
+		set FileName [ tk_getOpenFile -initialdir $::FilePath -filetypes $types ];	# Ask user
+	}
+	#--  Set file properties. Stop if user cancelled in dialog or file not exist
+	if { $FileName eq "" } { return }
+	if { ![file exists $FileName] } {
+   	tk_messageBox -message " File not found \n" -type ok -icon error
+		return
+	}
+	set ::FileName $FileName;						# Set global FileName
+	set ::FilePath [ file dirname $FileName ]; # Keep Last open directory
+	if { $::FileName ne "" } { set ::FileExtension [ file extension $FileName ] }
+
+	#--  Load/Decompress mdz archive
+	if { $::FileExtension eq ".mdz" || $::FileExtension eq ".mdZ" } {
+		LoadArchive $FileName; return
+	}
+	#--  Read file
+	set infile [open $FileName "r"]
+	set data [read $infile];
+	close $infile;
+	#--  Add file to recent List / Backup to restore later if necessary
+	if { ! [string match *NoBackup* $Options] } {
+		catch { set ::BackupText [ text:save {.fr.t} ] } ;		# Save buffer
+		set outfile [open "$::ConfPath/recent.md" a+ ]
+		puts  -nonewline $outfile "{$FileName} "
+      close $outfile
+	}
+	#puts "DebugLoadFile: $FileName  Options: $Options"
+	#--   Parse All the text and apply markdock syntax highlighting
+	ReformatAll $data
+	#--   Display Graphwiz diagram if .gv file
+	if { $::FileExtension eq ".gv" } {
+		TreeViewClose
+		exec tclsh $::ScriptPath/plugin/diagram.tcl $FileName &
+	}
+	#--  Close
+	.fr.t edit reset;                      		# Reset Undo/Redo buffer
+	.fr.t edit modified false;							# Set document as "unmodified"
+  	.fr.t see 1.0;     						# scroll at first line
+  	.fr.t mark set insert 1.0;        	# Set insert cursor at first line
+	focus .fr.t
+	wm title . $FileName
+	set ::status " Load: [ file tail $FileName]"
+	return $FileName
+}
+
+
+#==  REFORMAT / PARSE   TEXT DATA
+proc ReformatAll { data } {
+	.fr.t replace 1.0 end $data;					# Put raw text ( Format after )
+	set lines [split $data "\n"];					# Array with each line of file
+	set ::CodeLanguage [ string range $::FileExtension 1 4]; # File extention=Code language
+	#--  Parse Line-By-Line
+	foreach line $lines {
+		incr LineNumber
+		switch -glob [string toupper $::FileExtension] {
+			".MD" 	{ catch { ParseLine  $LineNumber $line } }
+			default	{ catch { FormatCodeBlock $::CodeLanguage  $LineNumber $line }}
+		}
+	}
+	#--  Parse whole text (not line-by-line)
+	if { [string toupper $::FileExtension] eq ".MD" } { ParseAll 1 $data }
+	set ::status " Reformat: Syntax [string toupper $::FileExtension]   [.fr.t count -lines 1.0 end ] lines";
+}
+
+
+#===   RELOAD ALL TEXT WITH PARSING
+proc ReloadFile {} {
+	#--  Save Old cursor position
+	set OldScrollPos [ .fr.t yview ];				# Save position of Yscroll
+	set OldInsert [ .fr.t index insert ];			# Save position of Insert Cursor
+	set OldMousePos [ .fr.t index current ];		# Save position of Mouse Cursor
+	#--  Reformat the text
+	ReformatAll [.fr.t get 1.0 "end-1c"]
+	#--  Restore Old Position
+	#.fr.t yview moveto [ lindex $OldScrollPos 0 ]; 	# Restore Scroll position
+  	.fr.t mark set insert $OldInsert;        			# Restore insert cursor position
+	.fr.t see $OldMousePos;     							# Restore Mouse position
+	#puts "DebugReformat: [ .fr.t yview ]"
+
+}
+
+
+#=====   SEARCH  / REPLACE  STRING
+proc SearchStr { FindStr  ReplaceStr  ModeRegexp  ReplaceAll LastSearch } {
+	.fr.t tag remove sel 0.0 end;					# Remove all tags 'sel'
+	.fr.t tag remove search 0.0 end;				# Remove all tags 'search'
+	set ::status " Ctrl+n for next. Esc to abort"
+	if { $ModeRegexp eq 1 } { set SearchMode "-regexp" } else { set SearchMode "-forwards" }
+	#puts "DebugSearch : Find: $FindStr  Repl: $ReplaceStr  Mode: $SearchMode  Pos:$LastSearch"
+	set cur [.fr.t search -nocase $SearchMode  -count length -- $FindStr $LastSearch end]
+	#--  If No more results found
+	if { $cur eq "" || $FindStr eq "" } {
+		tk_messageBox -message "  Finished Searching  \n" -type ok -icon info;
+		bind .fr.t <Control-n> {break;};  bind .fr.t <y>	{}; bind .fr.t <n> {};
+		set ::status ""
+		return 1.0
+	}
+	#--  Begin Search
+	.fr.t mark set insert $cur;								# place insert cursor at word start
+	.fr.t tag add sel $cur "$cur + $length char";		# Select the word
+	.fr.t tag add search $cur "$cur + $length char";	# Add tag search
+	.fr.t see [.fr.t index 1.0];								# scroll at first line
+	.fr.t see [.fr.t index $cur];								# scroll at position
+	#--  To Replace,  link key 'y'/'n' (yes/no) to ctrl-n to start a new search after keypressed
+	if { $ReplaceStr != "" } {
+		if $ReplaceAll { .fr.t replace sel.first sel.last $ReplaceStr }
+		set ::status " Replace y/n ?  (Esc to Cancel)"
+		bind .fr.t <y>	{
+			.fr.t replace sel.first sel.last $ReplaceStr
+			event generate .fr.t <Control-n>; break
+		}
+		bind .fr.t <n>	{ event generate .fr.t <Control-n>; break }
+	}
+	set cur [.fr.t index "$cur + $length char"];	 return $cur
+}
+
+#===  UTILITIES
+proc GetCurrentLine {} { return [ expr int([.fr.t index insert]) ] }
+proc ViewSyntax {} {
+	set ::HideSyntax false;
+	.fr.t tag configure syntax -elide $::HideSyntax
+	.fr.t tag configure TrailingSpace -elide $::HideSyntax
+	.fr.t tag configure metadata -elide $::HideSyntax
+}
+proc HideSyntax {} {
+	set ::HideSyntax true;
+	.fr.t tag configure syntax -elide $::HideSyntax
+	.fr.t tag configure TrailingSpace -elide $::HideSyntax
+	.fr.t tag configure metadata -elide $::HideSyntax
+}
+proc InsertTime {} {
+	.fr.t insert insert [clock format [clock seconds] -format "%d %b %Y"]
+}
+proc GetAbsolutePath { Path  Source } {
+	if { $Source ne "" && ! [ string match "/*" [file dirname $Path] ] && \
+			! [ string match "http*" $Path]  } {
+         	return [ file normalize [file dirname $Source]/$Path ]
+   } else { return $Path }
+}
+proc GetRelativePath { Path  Source } {
+	if { ! [ string match "http*" $Path] && [wm title . ] ne "Untitled"   } {
+		#set RelativePath [exec  realpath --relative-to [file dirname $Source] $Path ]
+		set RelativePath [ fileutil::relative [file dirname $Source] $Path ]
+		#puts "DebugRelPath:  Path <$Path>  Source <$Source>\n  Result <$RelativePath>"
+		return $RelativePath
+	} else { return $Path }
+}
+
+#===   MAIN   ( Executed at Start)
+if { $FileName eq "" } { wm title . Untitled } else { LoadFile $FileName "" }
+HideSyntax
+#puts "Fonts Available: \n [font families]\n--------------------------\n"
+
+

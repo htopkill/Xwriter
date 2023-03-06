@@ -1,0 +1,118 @@
+/*=====  CSS style.  Used when exporting file to HTML  =====  */
+
+/*===    COMMON  ( paragraph, list, table, blockquote ) */
+body { 	margin: 2%;    font-family: sans-serif;    	line-height: 120%;   }
+
+/*===    COMMON  VARIABLES  */
+/* Usage:	font-family: var(--font-family);  line-height: var(--line-height);   */
+:root {   --font-family: sans-serif;    	--line-height: 120%;   }
+
+/*===    PARAGRAPH     */
+p {  white-space: normal;   margin-bottom: 0;  }
+.indent1 {  padding-left: 4%;  display: block;  } 
+.indent2 { padding-left: 8%;  display: block;   }
+.indent3 { padding-left: 12%;  display: block; }
+
+/*===    PRE-FORMATTED TEXT     */
+pre {  white-space: pre-wrap; }
+tab { padding-left: 2em; }
+
+/*===   DIV,  SPAN,  BLOCK ELEMENT     */
+.center { text-align: center;  display: inline-block;  width:100%;  white-space: normal; }  
+.right { text-align: right;  display: inline-block;  width:100%;  white-space: normal;  }
+.fulljustify  { 
+	white-space: normal; text-align: justify;  text-justify: inter-word;
+	display: inline-block;  width:100%;  
+}
+.warning  { margin-left: 5%;  width: 50%;  background-color: #FFEFD5;  border:1px solid; padding-left: 10px; padding-right: 10px;  border-radius: 5px; display: inline-block; }
+
+/*===    HEADER     */
+h1.Title { display: block;  font-size: 1.8em;  color: brown;  text-align: center;  }   			
+h1 {  font-family: sans-serif;  }
+h2 , h3 , h4 , h5 , h6 {  
+	font-family: sans-serif;  color: black;  font-weight: bold;  width:100%;  margin-bottom: 0.5em; 
+} 
+h1 {  font-size: 1.5em;  color: darkred;  }
+h2 {  font-size: 1.3em;  border-bottom: 2px solid black;  }
+h3 {  font-size: 1.17em; text-decoration: underline; text-decoration-thickness: 2px;  }
+h4 {  font-size: 1em;  }
+h5 {  font-size: 1em;  font-style: italic; }
+h6 {  font-size: 1em; color: grey;  }
+
+/*===     LIST  UNORDERED    ( - / + / * )    */
+ul { padding-left: 4%; margin-top: 0.2em; }	/* Entire  list  */
+ul li {  }												/* Each  list  Item except bullet */
+
+/*===   LIST  ORDERED     ( 1. 2.  ...)       */
+ol { padding-left: 4%; margin-top: 0.2em;} 	 /* Entire  list   */
+ol li {   }												/* Each  list  Item except marker */
+ol > li::marker {  font-weight: bold; }		/*    marker  = 1.  2. ...    */
+
+
+/*===     HIGHLIGHT     */
+mark { color: brown; background-color: #f7f0f2; }
+
+/*===     LINKS     */
+a:link { text-decoration: none;  color: #1168cc }
+
+/*===   IMAGE  */
+img {  vertical-align: middle;   border-radius: 4px; }  /* align image (top/middle/bottom) */
+figcaption {   font-style: italic; }			/* Figure caption (display:none to disable ) */ 
+
+/*===     BLOCKQUOTE     */
+blockquote {  
+	font-style: italic; margin-left: 0%;  border-left: 6px solid LightSteelBlue;  padding-left: 2%;
+}
+
+/*===   HORIZONTAL RULE     */
+hr { border-width: 1px; color: gray; width: 100%; }
+
+/*===   TABLE  */
+table, th, td  {  
+	border: 1px solid lightgrey; padding-left: 10px; padding-right: 10px; 
+	border-collapse: collapse; margin-left: 3%;  
+}
+th { font-weight: bold; color: black; background: #e6e6e6; }				/*  Table Heading */
+tr:nth-child(2n+2) {  background: #f6f6f6; }				/* Background Color every 2 lines */
+caption { display: table-caption;  text-align: center;  font-style: italic; }   /* Table Caption */
+
+
+/*===   CODE   */
+code  { 	
+	font-family: sans-serif;  background-color: #EBEBEB;  display: inline; 
+	margin: 4px; padding: 0; padding-left: 4px; padding-right: 4px;
+}
+/*---   Code Block Only  */
+pre > code {   
+	font-family: sans-serif;  background-color: #EDEDED; white-space: pre-wrap;  display: block;  
+	margin-left: 1%; margin-right: 2%; padding-left: 1%; padding-bottom: 0.3em;
+}
+
+
+/*===   SUBSCRIPT,  SUPSCRIPT    */
+sub { font-size: smaller; }
+sup { font-size: smaller; }
+
+
+/*===   DEFINITION   LIST    */
+dl { }											/*  All The List */
+dt { font-weight: bold;  font-style: italic;  }		/*  Definition Term */
+dd {   }											/* Description of Definition terms */
+
+/*===  KEYBOARD   */
+kbd {  border-radius: 3px;  padding: 1px 2px 0;  
+		border: 1px solid grey; background-color: #f6f6f6 ;
+}
+
+/*===   DROPDOWN  /  DETAIL   */
+details { display: inline-block;  width:100%; }
+
+
+/*===     METADATA    */
+/*   Use 'display: none/block' to disable/enable pandoc metadata  in HTML  */
+/*   if you display metadata title, disable h1.Title defined in header section  */
+h1.title { display: none;  font-size: 1.8em;  color: brown;  text-align: center;  }   			
+p.subtitle  { display: none; font-size: 1.1em;  text-align: center;  font-style: italic; }
+p.author  { display: none; font-size: 0.8em; color: grey; font-style: italic; text-align: right; margin-top: 0; }
+p.date  {  display: none; font-size: 0.8em; color: grey; font-style: italic; text-align: right; margin-top: 0;  }
+

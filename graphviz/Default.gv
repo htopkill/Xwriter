@@ -1,0 +1,26 @@
+#  Diagram is updated each time you save this file ( Ctrl-s ).  
+#  NODE shape: 
+#     box, ellipse, circle, diamond, hexagon, octagon, house, invhouse, record, point, none ( style=solid) ...
+#  NODE style: filled, invisible, diagonals, rounded, dashed, dotted, solid and bold. 
+#  EDGE  arrowtail, arrowhead:  normal (arrow), none, box, dot ...
+#  EDGE  dir: forward, back, both
+
+digraph G {
+	#==   INIT
+	graph [ fontsize=20;  margin="0.3, 0.3" ];    		#  X,Y   margin in inch
+	size="8,8"; 											#  Width,Height in inch
+	labelloc="top";   label="Diagram Name\n\n";
+	rankdir=TB; 										#  TB:Top-Bottom  LR:Left-Right 
+	node [ fontsize=14   fontcolor=black   margin="0.2" 
+			shape=box   color=grey  penwidth=3.0   style=filled   fillcolor=skyblue    ];	
+	edge [  fontsize=14  color=black  penwidth=2.0  
+			dir=forward   arrowsize=1.0   arrowtail=normal   arrowhead=normal  ];
+	#==  DESCRIPTION
+	draw [   label= "Draw a picture"  ]
+	win [    label="You win!";   shape=oval    ]
+	guess [  label="Did they\nguess it?"  shape= diamond ]
+	draw -> guess
+	win -> guess [ label = "Yes"; dir=back ];
+	guess -> point  [ label = " No"  ]
+	{ rank=same;   guess; win; point }
+}

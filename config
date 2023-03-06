@@ -1,0 +1,32 @@
+#   SAVE and RESTART  to APPLY.   Always add ';' if you put an online comment
+#  This file is overwritten when you select theme/font directly inside xwriter
+
+#===  FONT
+font create TextFont				-family "sans" -size 15
+font create MonospaceFont		-family "monospace"  -size 14;  # Table, Code
+#==   FONT  USER-INTERFACE
+font create DefaultFont			-family "sans"  -size 15;	# Dialog/Menu font
+font create ButtonFont			-family "sans"  -size 12;	# Font for toolbar button
+
+#===  GEOMETRY / THEME
+set LineHeight						7;			#  Space between lines
+set PageView						large;		# Page layout : large or portrait
+set TextWindowWidth				90;			# % of screen if layout='portrait'
+set TableContentWidth			25;         # Width for Table Of Content left pane
+set StartMaximized				true;			# false/true: start app maximized
+set GlobalTheme					default;    # Theme = default/dark/terminal
+
+
+#===  OTHERS
+set CheckSpellLanguage		en;	# Native language (en/fr...  Req. package aspell-en/fr... )
+set BrowserViewer				xdg-open;		# Default Browser
+set FileViewer					/usr/bin/xdg-open;	# Default File Viewer
+
+
+#===  PANDOC  OPTIONS  ( as --Option1 --Option2  )
+#  lua filters directory: ~/.pandoc/filters   
+set PandocOptions			"--lua-filter=test.lua"
+
+#===  PANDOC  EXTENSIONS  ( as +/-Extension1+/-Extension2  )
+#  Refer to document ./doc/pandoc-markdown.md for description
+set PandocExtensions		"-implicit_figures-tex_math_dollars"

@@ -1,0 +1,226 @@
+#!/usr/bin/wish
+
+package require tooltip;					# For hint display when mouse over button
+namespace import tooltip::*;				# Import Namespace tooltip
+
+#===  DEFINE TOOLBAR
+frame .fr.tb -bg grey90
+tooltip delay 1000;							# Tooltip delay in milliseconds
+
+#===  DEFINE TOOLBAR ENTRY WIDGET 
+entry .fr.tb.entry -font DefaultFont   -relief sunken  \
+		-selectbackground "#FFEFD5" -background  "#F8F8F8" -foreground "#000000" \
+		-width 1 -textvariable status -state normal -borderwidth 2 -highlightthickness 0
+
+
+#==  DEFINE TOOLBAR  SEPARATOR
+proc separator {path} { return [frame $path -relief ridge -borderwidth 2 -width 2 -height 2] }
+
+#==  CREATE ICONS IMAGE (To Use with:  button .toolbar.exitButton -image img )
+#image create photo img_toc -file "$ScriptPath/img/xxx.png"
+
+
+#===  DEFINE TOOLBAR  BUTTONS
+# Button command linked to shortkey command. Relief: flat,groove,raised,ridge,solid,or sunken
+set ButtonFontFamily [ font actual ButtonFont -family ]
+set ButtonFontSize	[ font actual ButtonFont -size ]
+set ButtonStyle "-fg grey10 -bg grey90 -relief flat -width 1 -font { ButtonFontFamily $ButtonFontSize}"
+set ButtonStyleLarge "-fg grey10 -bg grey90 -relief ridge -width 3 -font { ButtonFont $ButtonFontSize}"
+button .fr.tb.buttonBold {*}$ButtonStyle -text "B" -font [list {*}[font actual ButtonFont] -weight bold] -command { event generate .fr.t <Control-b> }
+tooltip .fr.tb.buttonBold " Bold  (Ctrl-b)"
+button .fr.tb.buttonItalic {*}$ButtonStyle -text "I" -font [list {*}[font actual ButtonFont] -slant italic ]  -command { event generate .fr.t <Control-i> }
+tooltip .fr.tb.buttonItalic " Italic  (Ctrl-i)"
+button .fr.tb.buttonUnderline {*}$ButtonStyle -text "U" -font [list {*}[font actual ButtonFont] -underline 1 ] -command { event generate .fr.t <Control-u> }
+tooltip .fr.tb.buttonUnderline " Underline  (Ctrl-u)"
+button .fr.tb.buttonHighlight {*}$ButtonStyle -fg grey0 -bg grey83 -text "M" -command { event generate .fr.t <Control-m> }
+tooltip .fr.tb.buttonHighlight " Mark/Highlight  (Ctrl-m)"
+button .fr.tb.buttonOverstrike {*}$ButtonStyle -text "W" -font [list {*}[font actual ButtonFont] -overstrike 1 ] -command { ReplaceTag "Word" "overstrike" ""}
+tooltip .fr.tb.buttonOverstrike " Strikethrough "
+button .fr.tb.buttonFontSize {*}$ButtonStyle -text "A+" -command { event generate .fr.t <Control-l> }
+tooltip .fr.tb.buttonFontSize " Big Font Size "
+button .fr.tb.buttonHeading {*}$ButtonStyle -text "H1"  -command { event generate .fr.t <Control-h> }
+tooltip .fr.tb.buttonHeading " Toogle Header H1 > H2 > ... > H6  (Ctrl-h)"
+button .fr.tb.buttonSubScript {*}$ButtonStyle -text "^" -command { event generate .fr.t <Control-k> }
+tooltip .fr.tb.buttonSubScript " Superscript (Ctrl-k)"
+button .fr.tb.buttonCode {*}$ButtonStyle -text "C#" -width 2 -command { event generate .fr.t <Control-C> }
+tooltip .fr.tb.buttonCode " Code  (Ctrl-C)\n - No text selected: Insert Code Block\n - Words selected: Code Inline\n - Lines selected: Code Block "
+button .fr.tb.buttonJustify {*}$ButtonStyle -text "➞" -command { event generate .fr.t <Control-j> }
+tooltip .fr.tb.buttonJustify " Justify: Fill > center > right  (Ctrl-j)"
+button .fr.tb.buttonFontStyle {*}$ButtonStyle -text "Aa"  -command { event generate .fr.t <F5> }
+tooltip .fr.tb.buttonFontStyle " Text Font (Global) "
+button .fr.tb.buttonTOC  {*}$ButtonStyle -text "☰" -command  { event generate .fr.t <Control-T> }
+tooltip .fr.tb.buttonTOC " Table Of Content  (Ctrl T)"
+button .fr.tb.buttonMinus {*}$ButtonStyle -text "-" -command { event generate .fr.t <Control-minus> }
+button .fr.tb.buttonPlus  {*}$ButtonStyle -text "+" -command { event generate .fr.t <Control-plus> }
+button .fr.tb.buttonRecent {*}$ButtonStyle -text "◀"  -command { event generate .fr.t <Control-O> }
+tooltip .fr.tb.buttonRecent " Recent Files  (Ctrl-O)"
+button .fr.tb.buttonBookmark {*}$ButtonStyle -text "★"  -command { event generate .fr.t <Control-B> }
+tooltip .fr.tb.buttonBookmark " Bookmarks  (Ctrl-B)"
+button .fr.tb.buttonPageView {*}$ButtonStyle -text "⧺"  -command { event generate .fr.t <Control-less> }
+tooltip .fr.tb.buttonPageView " PageView Portrait/Large  (Ctrl <)"
+button .fr.tb.buttonViewSymbol  {*}$ButtonStyle -text "¶"  -command { event generate .fr.t <Control-space> }
+tooltip .fr.tb.buttonViewSymbol " View/Hide markdown symbols  (Ctrl-Space)"
+button .fr.tb.buttonWrap  {*}$ButtonStyle -text "w" -relief solid -command { event generate .fr.t <Control-w> }
+tooltip .fr.tb.buttonWrap " Wrap text  Word/None  (Ctrl-w)"
+
+#===  DEFINE VERTICAL SEPARATOR FOR TOOLBAR
+proc separator {path} { return [frame $path -relief groove -borderwidth 2 -width 2 -height 2] }
+
+#==     DEFINE 'INSERT' SUB-MENU
+menubutton .fr.tb.menuInsert {*}$ButtonStyleLarge -relief ridge -text "Ins" -width 4 -menu .fr.tb.menuInsert.m
+tooltip .fr.tb.menuInsert " Insert "
+menu .fr.tb.menuInsert.m -tearoff false -background grey90 -foreground grey20 -activebackground #82A0B9 -activeforeground white
+
+.fr.tb.menuInsert.m add command -label "  Image" -command  {
+	InsertImage "" [.fr.t index insert ] ""
+}
+.fr.tb.menuInsert.m add command -label "  HyperLink" -command  {	.fr.t insert insert "\[Search link\](https://duckduckgo.com/)" }
+.fr.tb.menuInsert.m add command -label "  File Link" -command  {
+	after idle ForceWindowSize;   # Force OpenFile window size
+	set FileLink [ tk_getOpenFile -initialdir $::FilePath ]
+	set ::FilePath [ file dirname $FileLink ]; # Keep Last open directory
+	if { $FileLink ne "" } { .fr.t insert insert "\[[file tail $FileLink]\]($FileLink)" }
+}
+.fr.tb.menuInsert.m add command -label "  Table" -command  {
+	ViewSyntax;
+	.fr.t insert insert "\n" left
+	.fr.t insert insert "|  FirstHeader    |     Header2      |     LastHeader   |"  TableHeader "\n" Normal
+	.fr.t insert insert "|-----------------|:----------------:|-----------------:|\n"  "syntax Table"
+	.fr.t insert insert "| Left Align      | Center align     | Right align"  Table "\n" Normal
+}
+.fr.tb.menuInsert.m add command -label "  Code Block" -command  { event generate .fr.t <Control-C> } -accelerator "Ctrl C"
+
+menu .fr.tb.menuInsert.m.blockHTML -tearoff 0 -background grey90 -foreground grey20 -activebackground #82A0B9 -activeforeground white
+source $::ScriptPath/toolbar-html; # Load sub-menu BlockHTML
+
+.fr.tb.menuInsert.m add command -label "  Page Break" -command  { .fr.t insert "insert lineend" "\n" "" "{{pagebreak}}" PageBreak "\n" ""}
+.fr.tb.menuInsert.m add command -label "  HTML alias" -command  { event generate .fr.t <Control-dollar> } -accelerator "Ctrl $"
+.fr.tb.menuInsert.m add command -label "  Tree" -command  {
+	ViewSyntax
+	.fr.t insert insert "\n" normal "```" syntax "\n" normal \
+		"Root\n├── Root1\n│   └── Root1.1\n└── Root2\n" CodeBlock "```" syntax "\n" normal
+	.fr.t mark set insert "insert-4l linestart"
+}
+.fr.tb.menuInsert.m add command -label "  Comment" -command  {
+	ViewSyntax
+   .fr.t insert insert " " normal "<!" Comment "--  Use Ctrl-Space to Display/Hide comment  --" {syntax Comment} ">" Comment " " normal
+}
+.fr.tb.menuInsert.m add command -label "  Include file" -command  {
+	after idle ForceWindowSize;   # Force OpenFile window size
+	set FileLink [ tk_getOpenFile -initialdir $::FilePath ]
+	if { $FileLink ne "" } { .fr.t insert insert "{{include \[[file tail $FileLink]\]($FileLink) }}" }
+	#ViewSyntax
+	#.fr.t insert insert "\n" normal "```include" syntax "\n" normal \
+	#"# Insert list of files to include. Absolute/Relative path allowed\n\n" CodeBlock "```" syntax "\n" normal
+	#.fr.t mark set insert "insert-2l linestart"
+}
+
+.fr.tb.menuInsert.m add separator
+.fr.tb.menuInsert.m add command -label "  Table of Contents" -command  {
+	.fr.t insert insert "\n" normal
+	CreateTOC "insert"
+}
+.fr.tb.menuInsert.m add command -label "  Metadata" -command  {
+	.fr.t insert 1.0 "---\n\n";  # last line
+	.fr.t insert 1.0 "title: \nsubtitle: \nauthor: \ndate: \nsubject: \ndescription: \nkeywords: \n" metadata
+	.fr.t insert 1.0 "---\n"
+	.fr.t see 1.0;  								# Scroll at first line
+   .fr.t mark set insert 2.8;					# Set insert cursor at position
+	ViewSyntax
+}
+.fr.tb.menuInsert.m add command -label "  Date" -command { InsertTime }
+.fr.tb.menuInsert.m add command -label "  Symbols"  -command {event generate .fr.t <Control-U>} -accelerator "Ctrl U"
+
+#==     DEFINE 'TOOLS' SUB-MENU
+menubutton .fr.tb.menuTools {*}$ButtonStyle -relief flat -text "▣" -width 3 -menu .fr.tb.menuTools.m
+tooltip .fr.tb.menuTools " Tools "
+menu .fr.tb.menuTools.m -tearoff false -background grey90 -foreground grey20 -activebackground #82A0B9 -activeforeground white
+if { [ info exists EnableToolbarSpell ] } {
+	.fr.tb.menuTools.m add command -label "  Spell Check" -command {event generate .fr.t <F2>} -accelerator "F2"
+	.fr.tb.menuTools.m add command -label "  Spell Change Language" -command {event generate .fr.t <F3>} -accelerator "F3"
+	.fr.tb.menuTools.m add command -label "  Conjugate (French)" -command {event generate .fr.t <F4>} -accelerator "F4"
+}
+.fr.tb.menuTools.m add command -label "  Force NewLine" -command  { ForceLineBreak} -accelerator "";  # Force 2 trailing spaces at each EOL
+.fr.tb.menuTools.m add command -label "  Remove Trailing Spaces" -command  { RemoveTrailingSpace} -accelerator "";  # Remove all trailing spaces at each EOL
+.fr.tb.menuTools.m add separator
+.fr.tb.menuTools.m add command -label "  Edit Themes" -command { LoadFile $ConfPath/theme.tcl "NoBackup" }
+.fr.tb.menuTools.m add command -label "  Switch Theme" -command {event generate .fr.t <Control-t>} -accelerator "Ctrl t "
+.fr.tb.menuTools.m add command -label "  Edit HTML style" -command { LoadFile $ConfPath/export.css "NoBackup" }
+.fr.tb.menuTools.m add command -label "  Edit Documents style" -command {
+      	set FileName [ tk_getOpenFile -initialdir "$::env(HOME)/.pandoc" ]
+			if { $FileName ne "" } { catch { exec libreoffice --writer $FileName } }
+}
+.fr.tb.menuTools.m add separator
+
+.fr.tb.menuTools.m add checkbutton -label "  Display Web Image " -variable ::ImageDownload -onvalue 1 -offvalue 0 -command { Display_Web_Image }
+.fr.tb.menuTools.m add command -label "  Color Picker" -command { .fr.t insert insert [ tk_chooseColor ] }
+.fr.tb.menuTools.m add command -label "  Create graphviz Diagram" -command {
+	if { !($::GraphvizMissing) } {
+     	set FileName [ tk_getOpenFile -initialdir  "$ScriptPath/graphviz" -title "Choose Template" ]
+		if { $FileName ne "" } {
+			set UserFile "$::env(HOME)/Documents/Diagram-[clock seconds].gv"
+   	   file copy -force $FileName  $UserFile
+			LoadFile $UserFile ""
+		}
+	} else { set status " application Pandoc/Graphviz is missing " }
+}
+.fr.tb.menuTools.m add checkbutton -label "  Enable pantcl filters " -variable ::pantclfilter -onvalue 1 -offvalue 0 -command { 
+	set ::status " Pantcl filters: [ string map {0 "OFF" 1 "ON"} $::pantclfilter ] "
+}
+
+
+
+#==    DEFINE TOOLBAR MAIN MENU
+# Relief: flat,groove,raised,ridge,solid,or sunken
+#menubutton .fr.tb.menufile -background  grey90 -image img_menu  -menu .fr.tb.menufile.m; # -text "=" {*}$ButtonStyleLarge -relief flat
+menubutton .fr.tb.menufile -text "⊙" {*}$ButtonStyleLarge  -relief raised  -menu .fr.tb.menufile.m
+tooltip .fr.tb.menufile " Menu "
+menu .fr.tb.menufile.m -tearoff false \
+		-background grey90 -foreground grey20 -activebackground #82A0B9 -activeforeground white
+#.fr.tb.menufile.m add command -label "Open" -command {event generate .fr.t <Control-o>} -accelerator "    Ctrl o " -image img_item -compound left
+.fr.tb.menufile.m add command -label " Open" -command {event generate .fr.t <Control-o>} -accelerator "Ctrl o"
+.fr.tb.menufile.m add command -label " Open Recent" -command {event generate .fr.t <Control-O>} -accelerator "Ctrl O"
+.fr.tb.menufile.m add command -label " Save" -command {event generate .fr.t <Control-s>} -accelerator "Ctrl s"
+.fr.tb.menufile.m add command -label " Save As" -command {event generate .fr.t <Control-S>} -accelerator "Ctrl S"
+.fr.tb.menufile.m add command -label " Reformat Text" -command {event generate .fr.t <Control-r>} -accelerator "Ctrl r"
+.fr.tb.menufile.m add separator
+.fr.tb.menufile.m add command -label " Find/Replace" -command {event generate .fr.t <Control-f>} -accelerator "Ctrl f"
+.fr.tb.menufile.m add command -label " Goto Line" -command {event generate .fr.t <Control-g>} -accelerator "Ctrl g"
+.fr.tb.menufile.m add command -label " Print to browser" -command { event generate .fr.t <Control-p> }  -accelerator  "Ctrl p"
+.fr.tb.menufile.m add command -label " Import URL" -command {
+	if !($::PandocMissing) { AskUser " Enter URL: "
+	} else { set status " application Pandoc is missing " }
+}
+.fr.tb.menufile.m add command -label " Import Document" -command { ImportDocument }
+.fr.tb.menufile.m add command -label " Compare File with" -command { CompareFile }
+.fr.tb.menufile.m add separator
+.fr.tb.menufile.m add command -label " Help" -command {event generate .fr.t <F1>} -accelerator "F1"
+.fr.tb.menufile.m add command -label " Preferences" -command { event generate .fr.t <Control-P> }  -accelerator  "Ctrl P"
+.fr.tb.menufile.m add command -label " Exit" -command exit -accelerator "Ctrl q"
+
+
+#===   PACK  MAIN MENU / TOOLBAR  / SUB-MENU
+pack .fr.tb.menufile -side left -padx 5 -pady 1
+pack .fr.tb.buttonBold -side left -padx 2 -pady 1
+pack .fr.tb.buttonItalic -side left -padx 2 -pady 1
+pack .fr.tb.buttonUnderline -side left -padx 2 -pady 1
+pack .fr.tb.buttonHighlight -side left -padx 2 -pady 1
+pack .fr.tb.buttonOverstrike  -side left -padx 2 -pady 1
+pack .fr.tb.buttonFontSize -side left -padx 4 -pady 1
+pack .fr.tb.buttonHeading -side left -padx 3 -pady 1
+pack .fr.tb.buttonSubScript -side left -padx 2 -pady 1
+pack .fr.tb.buttonCode -side left -padx 3 -pady 1
+pack .fr.tb.buttonJustify -side left -padx 3 -pady 1
+pack .fr.tb.buttonFontStyle -side left -padx 1 -pady 1
+pack [separator .fr.tb.sep10] -fill y -side left -padx 5 -pady 1
+pack .fr.tb.menuInsert -side left -padx 3 -pady 1
+pack .fr.tb.buttonTOC -side left -padx 1 -pady 1
+pack .fr.tb.entry -side left -fill x -padx 4 -pady 1 -expand true
+pack .fr.tb.buttonRecent  -side left -padx 3 -pady 1
+pack .fr.tb.buttonBookmark  -side left -padx 3 -pady 1
+pack .fr.tb.menuTools -side left -padx 2 -pady 1
+pack .fr.tb.buttonPageView  -side left -padx 2 -pady 1
+pack .fr.tb.buttonViewSymbol -side left -padx 1 -pady 1
+pack .fr.tb.buttonWrap  -side left -padx 3 -pady 1
+pack [separator .fr.tb.sep40] -fill y -side left -padx 5 -pady 1
+

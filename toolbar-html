@@ -1,0 +1,56 @@
+#!/usr/bin/wish
+#   Define toolbar sub-menu 'HTML Block' to insert HTML code in the document
+
+
+#==     DEFINE SUB-MENU
+.fr.tb.menuInsert.m add cascade -label "  HTML Code" -menu .fr.tb.menuInsert.m.blockHTML
+
+
+.fr.tb.menuInsert.m.blockHTML  add command -label "  Font Color" -command  {
+	.fr.t insert insert "<span style='color:red;background-color:silver'>Text</span>" }
+.fr.tb.menuInsert.m.blockHTML  add command -label "  Font size/family" -command  {
+	.fr.t insert insert "<span style='font-family:serif;font-size:1.0em'>Text</span>" }
+
+.fr.tb.menuInsert.m.blockHTML  add command -label "  Pandoc Div Block" -command  {
+	.fr.t insert insert "\n" "" ":::{ #MyID  .MyClass  custom-style='ExportStyle'}\n\n:::\n"
+	.fr.t mark set insert "insert-2l linestart"
+	.fr.t see insert; # scroll at insert index
+}
+
+.fr.tb.menuInsert.m.blockHTML  add command -label "  Pandoc Span Element" -command  {
+	.fr.t insert insert " \[Text\]{.Myclass  custom-style='ExportStyle'} "
+}
+
+.fr.tb.menuInsert.m.blockHTML  add command -label "  Text Block" -command  {
+	.fr.t insert insert "\n" "" "<div style='text-align: left; color: black; background-color:white; white-space: pre-wrap;'>\n\n</div>\n" BlockHTML "\n" ""
+	.fr.t mark set insert "insert-3l linestart"
+	.fr.t see insert; # scroll at insert index
+}
+
+
+.fr.tb.menuInsert.m.blockHTML  add command -label "  Text fully-justify" -command  {
+   .fr.t insert insert "\n" "" "<div style='text-align: justify; text-justify: inter-word; white-space: normal;'>\n\n</div>\n" BlockHTML "\n" ""
+   .fr.t mark set insert "insert-3l linestart"
+}
+
+.fr.tb.menuInsert.m.blockHTML  add command -label "  Image with width/height" -command  {
+   .fr.t insert insert "\n" normal "<img src='test1.jpg' width='120px' height='80px'></img>" normal "\n" normal
+}
+
+
+.fr.tb.menuInsert.m.blockHTML  add command -label "  Table" -command  {
+	.fr.t insert insert "\n" "" "<div>\n\
+	\t<table  align='center' width='90%'  border='1' style='border: 1px solid black; text-align: center;'>\n\
+	\t\t<col style='width:40%'>\t\t<col style='width:20%'>\t\t<col style='width:40%'>\n\
+	\t\t<tr>\t<th>  Header1\t</th>\t<th>  Header2\t</th>\t<th>  Header3\t</th>\t\t</tr>\n\
+	\t\t<tr>\t<td>  Item1\t</td>\t<td>  Item2\t</td>\t<td>  Item3\t</td>\t\t</tr>\n\
+	\t</table>\n</div>\n" BlockHTML "\n" ""
+	.fr.t see insert; # scroll at insert index
+}
+
+.fr.tb.menuInsert.m.blockHTML add command -label "  Details" -command  {
+   .fr.t insert insert "\n" "" \
+		"<details>\n<summary>Click to Expand/Collapse</summary>\n\
+		Expanded content\n</details>\n" BlockHTML
+	.fr.t see insert; # scroll at insert index
+}

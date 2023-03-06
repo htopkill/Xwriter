@@ -1,0 +1,39 @@
+#  The diagram is updated each time you save this file ( Ctrl-s )
+
+digraph G {
+
+	#==   INIT
+	graph [ fontsize=20;  margin="0.3, 0.3" ] 	;    # X,Y   margin in inch
+	labelloc="top";
+	label="Progress Bar\n\n";
+	#==  NODE
+	node [ fontsize=18   fontcolor=black   
+				shape=none   color=black  penwidth=1.0   style=solid   fillcolor=skyblue      ];	
+	#==  EDGE
+	#  arrowtail, arrowhead:  normal (arrow), none, box, dot ...
+	#  dir: forward, back, both
+	edge [  fontsize=14  color=white  penwidth=1.0  dir=forward  ];
+
+	#==   HORIZONTAL   PROGRESS   BAR 
+	rankdir=TB
+	node [ height=0.6 ]
+	{ rank=same;  "Label1"   "100%" [   shape=box   style=filled  width=10 ]   "Top" }
+	{ rank=same;  "Label2";   "Middle1" [   shape=box   style=filled  width=5 ]  "50%"  }
+	{ rank=same;  "Label3";    "Middle2" [   shape=box   style=filled  width=7 ];   "70%" }
+	{ rank=same;  "Label4";    "30%" [   shape=box   style=filled  width=3 ];   "Bottom" }
+	Label1-> Label2
+	Label2-> Label3
+	Label3-> Label4
+
+	#==   VERTICAL   PROGRESS   BAR 
+	# node [ width=1 ]
+	# rankdir=LR
+	# { rank=same;  "Label1"   "1" [   shape=box   style=filled  height=4  ]   "100%" }
+	# { rank=same;  "Label2";   "2" [   shape=box   style=filled  height=2 ]  "50%"  }
+	# { rank=same;  "Label3";    "3" [   shape=box   style=filled  height=3 ];   "70%" }
+	# { rank=same;  "Label4";    "4" [   shape=box   style=filled  height=1 ];   "30%" }
+	# Label1-> Label2
+	# Label2-> Label3
+	# Label3-> Label4
+
+}

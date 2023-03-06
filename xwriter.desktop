@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=xwriter
+GenericName=Markdown Editor
+Comment=Markdown Editor
+Type=Application
+Icon=text-x-generic
+Exec=wish ~/Downloads/xwriter/xwriter %f
+Categories=Office;
+NoDisplay=false
+MimeType=text/plain;text/markdown;
+Terminal=false

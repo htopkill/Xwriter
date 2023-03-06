@@ -1,0 +1,13 @@
+#  Diagram is updated each time you save this file ( Ctrl-s ).  
+
+digraph G {
+	#==   INIT
+	graph [ fontsize=20;  margin="0.3, 0.3" ] 	;    # X,Y   margin in inch
+	rankdir=LR; 		#  TB:Top-Bottom  LR:Left-Right 
+	node [ fontsize=14   fontcolor=black   margin="0.2"   style=filled   fillcolor=skyblue    ];	
+	edge [  fontsize=14  penwidth=2.0  arrowsize=1.0   arrowtail=normal   arrowhead=normal  ];
+	#==  DESCRIPTION
+	struct1 [ label = "a|b|<p1>c"   shape=record];
+	struct2 [ label = "a|{<p2>b1|b2}"  shape=record ];
+	struct1:p1 -> struct2:p2
+}

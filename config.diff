@@ -1,0 +1,7 @@
+---		Xwriter-V0.4.0/xwriter/config	2023-02-16 15:38:27.000000000 +0100
++++	Xwriter/config					2023-02-24 15:42:14.513930258 +0100
+ 
+  #===     GEOMETRY / THEME
+-set TextWindowWidth		80;		#  layout 'portrait' characters per line (55-75)
++set TextWindowWidth	90;		# % of screen if layout='portrait'
++set TableContentWidth	25;         # Left pane witdh for Table Of Content

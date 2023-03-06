@@ -1,0 +1,17 @@
+#  The diagram is updated each time you save this file. 
+
+digraph G {
+	graph [ fontsize=20  ] 	;    # X,Y   margin in inch
+	node [ fontsize=16; shape=box   style=rounded   width=2.1   height=1.1 ]
+	edge [  color=orange  penwidth=3.0   arrowsize=1.5  ];
+	subgraph cluster_0 {
+		label="\n               Subgraph A                 \n\n"  
+		bgcolor="lightgreen"
+		"  Draw subgraph   \n with graphwiz" -> "Point"
+	}
+	subgraph cluster_1 {
+		label="\n        Subgraph B           \n\n"
+		bgcolor="lightblue"
+ 		abc -> def	
+	}
+}
