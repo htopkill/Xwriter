@@ -14,7 +14,7 @@ Why should i use Xwriter ?
 4.   You want to develop plugin/extra features with an easy-to-learn language (tcl/tk)  
 5.   You want to be able to customize everything ( toolbar, themes .... )  
 
-With Xwriter/pandoc, you can do amazing tasks :  import a web site you can edit as a rich-text file, then save to a zip file you can edit/read later... in less than 30 seconds  
+With Xwriter/pandoc, you can do amazing tasks :  import a web page you can edit as a rich-text file, then save to a zip file you can edit/read later... in less than 30 seconds  
 
 
 Contact/Discussion :  

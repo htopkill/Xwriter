@@ -142,7 +142,7 @@ proc ParseLine { RowNum Row } {
 	TagReg overstrike    {(~~)((?=\S).*?\S)(~~)}  	$Row $RowNum
 	TagReg highlight     {(<mark>)(.*?)(</mark>)}	$Row $RowNum
 	TagReg superscript	{(<sup>)(.*?)(</sup>)}		$Row $RowNum;
-	TagReg superscript	{(\^)(.*?)(\^)}		$Row $RowNum;
+	#TagReg superscript	{(\^)(.*?)(\^)}		$Row $RowNum;
 	TagReg subscript		{(<sub>)(.*?)(</sub>)}		$Row $RowNum;
 	TagReg BigFont			{(\+\+)((?=\S).*?\S)(\+\+)}			$Row  $RowNum
 	TagReg URL				{(\[)([^\[\]]+?)(\]\(.+?\))}	$Row $RowNum; # [Name](Pathfile..)

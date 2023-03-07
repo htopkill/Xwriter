@@ -119,8 +119,8 @@ Main changes compared to markdown are :
 |  \`\`\`[language] Code Block\`\`\`    |  \`\`\`[language] Code Block\`\`\`
 |  Table(Github Flavor Markdown)  |  Table (Github Flavor Markdown GFM)
 |  : Definition List              |  : Definition List
-|  [\^text]  footnote reference    |  [\^text]  footnote reference 
-|  [\^text]: footnote description  |  [\^text]: footnote description 
+|  [\^text\]  footnote reference    |  [\^text\]  footnote reference 
+|  [\^text\]: footnote description  |  [\^text\]: footnote description 
 |  - [x]  Task Completed          |  - [x]  Task Completed
 |  - [ ]  Task incomplete         |  - [ ]  Task incomplete
 |  NO files inclusion             | {\{include [name]\(FilePath)}\} 
