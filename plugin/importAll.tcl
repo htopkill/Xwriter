@@ -54,7 +54,7 @@ proc ImportURL { PathLink } {
 proc CheckURL { URL } {
 		set status 0
       catch { set status [ exec  curl -Is --connect-timeout 8  $URL | head -n 1 ] }
-		update
+		#update
 		if {  [string match "HTTP* 4*" $status] || [string match "HTTP* 5*" $status] || $status eq 0 } {
 			#puts "Invalid URL: $URL    Status: $status"
 			return 1
@@ -64,7 +64,7 @@ proc CheckURL { URL } {
 
 #==   TIMEOUT  COUNTER
 #   Init a counter. Exit if timeout reached or pandoc output file exist
-proc countdown {{cnt}} {
+proc countdown {cnt} {
 	.fr.tb.entry configure -background "#FFE4B5"
 	#--  End of Timeout
 	if { $cnt <= 0 || [file exist $::ImportFile] } {
@@ -81,5 +81,6 @@ proc countdown {{cnt}} {
 	} else { set ::status " Wait $cnt seconds ..." }
 	#-- Continue timeout	
 	incr cnt -1
+	update idletasks;  # Refresh User interface
 	after 1000 [list countdown $cnt ]
 }

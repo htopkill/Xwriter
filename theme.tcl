@@ -10,7 +10,7 @@
 #===   THEME  DEFAULT
 proc SetTheme_Default {} {
   	.fr.t configure					-font TextFont   -foreground #161616   -background #FEFEFE
-	.fr configure					-bg  "#FEFEFE";				# Background color if view = portrait
+	.fr configure					-bg  "#FEFEFE";		# Background color if view = portrait
 	.fr.t tag configure sel			-background "#FFEFD5";  		# Selection
 	.fr.t tag configure search		-background  "#FFEFD5";
 	.fr.t tag configure syntax		-foreground red;	# Markdown symbols

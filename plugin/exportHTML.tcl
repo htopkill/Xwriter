@@ -202,7 +202,8 @@ proc ExportAsHTML { FileName } {
 	}; # End pandoc exec
 
    #-- If Error found after conversion, stop here
-   if { ![file exists $FileName] || $ErrorVar ne "" &&  ! [ string match "*WARNING*" $ErrorVar ] } {
+   if { $ErrorVar ne "" } { puts "== PANDOC Message ==\n $ErrorVar" }
+   if { ! [file exists $FileName] } {
       tk_messageBox -message "ERROR : \n$ErrorVar" -type ok -icon error
       return
    }

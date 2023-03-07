@@ -128,7 +128,7 @@ proc ExportWithPandoc { FileName } {
 	} else { set PantclFilters  "" }
 
 	#-- Export To File
-	file delete -force $FileName
+	file delete -force $FileName;		# Delete output file before conversion 
 	#puts "DebugExport:  format=$format  style=$Style"
 	# Get Extentions : pandoc --list-extensions=markdown
 	# --columns= column widths for plain text tables
@@ -142,12 +142,11 @@ proc ExportWithPandoc { FileName } {
 							/tmp/export.md -o $FileName \
 			} ErrorVar
 	#--  Display Final Message
-	if { ![file exists $FileName] || $ErrorVar eq "" &&  ! [ string match "*WARNING*" $ErrorVar ] } {
+	if { [file exists $FileName] } {
 			tk_messageBox -message " Export to format [string toupper $format] done  \n" -type ok -icon info
 	} else {
 		tk_messageBox -message "WARNING / ERROR \n\n  $ErrorVar" -type ok -icon error
 	}
-
-
+	if { $ErrorVar ne "" } { puts "== PANDOC Message ==\n $ErrorVar" }
 }
 

@@ -29,3 +29,4 @@ Syntax {{HTML alias}} Text {}  is no more supported. Use ` 'Text'{HTML alias} `
 -  Font family for all text (header...) updated only after restart and not in real-time
 -  Wrong  italic parsing in some cases
 -  Useless div/span syntax when importing a document
+-  Error with pandoc not correctly reported

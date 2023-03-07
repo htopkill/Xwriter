@@ -6,6 +6,17 @@
 Xwriter is a plain-text/rich-text editor for Linux  
 based on an extended markdown syntax ( [Markdock](markdock.md) )  
 
+Why should i use Xwriter ?  
+
+1.   You want a **real** rich-text editor based on markdown, with just a few extra syntax  
+2.   You want to keep your markdown files in a zip file you can open with Xwriter  
+3.   You want pandoc import/export features  
+4.   You want to develop plugin/extra features with an easy-to-learn language (tcl/tk)  
+5.   You want to be able to customize everything ( toolbar, themes .... )  
+
+With Xwriter/pandoc, you can do amazing tasks :  import a web site you can edit as a rich-text file, then save to a zip file you can edit/read later... in less than 30 seconds  
+
+
 Contact/Discussion :  
 [ Mastodon ](https://fosstodon.org/@sudokill)  
 [ Reddit ](https://www.reddit.com/r/markdock/)  

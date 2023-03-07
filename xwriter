@@ -323,6 +323,7 @@ proc ReformatAll { data } {
 	#--  Parse Line-By-Line
 	foreach line $lines {
 		incr LineNumber
+		if { $LineNumber eq 80 } { update idletasks }; # Refresh UI after 500 lines (for huge file )
 		switch -glob [string toupper $::FileExtension] {
 			".MD" 	{ catch { ParseLine  $LineNumber $line } }
 			default	{ catch { FormatCodeBlock $::CodeLanguage  $LineNumber $line }}
