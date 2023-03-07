@@ -4,7 +4,7 @@
 Use 'Escape' or 'F1' to exit Help
 
    [Introduction](#introduction)
-   [Essential ShortKeys](#main-shortkeys)
+   [Essential ShortKeys](#essential-shortkeys)
    [Editing Shortkeys](#editing-shortkeys)
    [Formatting Shortkeys](#formatting-shortkeys)
    [Markdock syntax](#markdock-syntax)
@@ -172,6 +172,7 @@ Require application 'pandoc' installed
 ##  Pandoc filters
 
 1. Use pre-defined pandoc filters : [pantcl filters](doc/pantcl/)
+pre-defined filters are disable by default at each start
 Activate pre-defined filters in  Toolbar > ▣ > Enable pantcl filters
 or
 2. Write your own lua filters in ~/.pandoc/filters and enable these filters in Menu > Preferences

@@ -21,7 +21,7 @@ set ConfFile "$ConfPath/config"
 set PandocExtensions ""
 set FileExtension .md;  				# markdown syntax for 'Untitled' at start 
 set status "  F1: View Help"
-set env(FILTEREVAL) 0;  	# Disable pantcl 'tcl' block evaluation (bugs)
+set env(FILTEREVAL) 0;  	# Disable pantcl block evaluation (Pb with tcl syntax highlighting)
 if { [auto_execok pandoc] ne "" } { set PandocMissing false } else { set PandocMissing true }
 if { [auto_execok lowdown] ne "" } { set LowdownMissing false} else { set LowdownMissing true }
 if { [auto_execok dot] ne "" } { set GraphvizMissing false } else { set GraphvizMissing true }

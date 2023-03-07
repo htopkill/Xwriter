@@ -98,7 +98,7 @@ Main changes compared to markdown are :
 | \<sub\>subscript\</sub\>            |  \<sub\>subscript\</sub\>
 | Unordered list [Spaces]- * +    |  Unordered list [Spaces/0-2Tabs]- * +
 | Ordered list  [Spaces]1. 1)     |  Ordered list  [Spaces/0-2Tabs]1. 1)
-| > >> Block Quote                | > >> Block Quote  (begin line with >)
+| >/>> Block Quote                | >/>> Block Quote  (begin line with >)
 |          -                      |  ::[Spaces/Tabs] Full-Justification
 | \<div align='center'\>            |  :::[Spaces/Tabs] Justify line center
 | \<div align='right'\>             |  ::::[Spaces/Tabs] Justify line Right

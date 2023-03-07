@@ -124,9 +124,8 @@ proc ExportWithPandoc { FileName } {
 	set  Style "$::ConfPath/style$FileExtention"
 
    #--  Enable pantcl filters  ( Menu > Tools > Enable pantcl filters )
-	if { $::pantclfilter } {
-		append ::PandocOptions " --filter $::ScriptPath/plugin/pantcl.tapp"
-	}
+	if { $::pantclfilter } { set PantclFilters " --filter $::ScriptPath/plugin/pantcl.tapp"
+	} else { set PantclFilters  "" }
 
 	#-- Export To File
 	#puts "DebugExport:  format=$format  style=$Style"
@@ -137,7 +136,8 @@ proc ExportWithPandoc { FileName } {
 							--columns=2 \
 							--resource-path=[file dirname $FileName] \
 							--from markdown+hard_line_breaks+autolink_bare_uris+lists_without_preceding_blankline$::PandocExtensions \
- 							$::PandocOptions \
+ 							"$::PandocOptions" \
+							$PantclFilters \
 							/tmp/export.md -o $FileName \
 			} ErrorVar
 	#--  Display Final Message

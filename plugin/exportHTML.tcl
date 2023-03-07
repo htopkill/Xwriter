@@ -183,9 +183,8 @@ proc ExportAsHTML { FileName } {
 	#--  Begin Conversion with pandoc
 	if !($::PandocMissing) {
 		#--  Enable pantcl filters  ( Menu > Tools > Enable pantcl filters )
-		if { $::pantclfilter } {
-			append ::PandocOptions " --filter $::ScriptPath/plugin/pantcl.tapp"
-		}
+		if { $::pantclfilter } { set PantclFilters " --filter $::ScriptPath/plugin/pantcl.tapp"
+		} else { set PantclFilters  "" }
 		#--  Execute Pandoc program
 		# Get Extentions : pandoc --list-extensions=markdown
 		#  --metadata=title:     Do not use metadata 
@@ -194,6 +193,7 @@ proc ExportAsHTML { FileName } {
 						--to  html5 \
 						--css=$FileCSS \
 						"$::PandocOptions" \
+						$PantclFilters \
 						/tmp/export.md -o  $FileName } ErrorVar
 	}; # End pandoc exec
 
