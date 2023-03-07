@@ -4,9 +4,7 @@
  
 ### Update Instruction 
 
-If you have previously installed **xwriter** :   
--  Update your configuration file ( ~/.config/xwriter/config ) with :  [config.diff](config.diff)
--  Update your personnal theme ( ~/.config/xwriter/theme.tcl )  with : [theme diff](theme.tcl.diff)
+Nothing to do
 
 ###  Obsolete
 

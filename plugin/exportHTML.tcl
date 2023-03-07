@@ -23,6 +23,9 @@ proc Convert2Markdown { SourceFile  DestFile } {
    #--  Replace list symbol '•' with '*'
 	regsub -all -line  {^(\s*)(?:•)(.*?)} $Data {\1*\2} Data
 
+	#--  Replace ```dot with ```.dot  (ERROR with pantcl filters)
+   regsub -all -lineanchor {^```dot} $Data {```.dot} Data
+
 	#-- CONVERT markdock>markdown LINE-BY-LINE EXCEPT CODEBLOCK/CODEINLINE
 	set lines [split $Data "\n"];					# Array with each line of file
 	foreach line $lines {
@@ -166,8 +169,9 @@ proc ExportAsHTML { FileName } {
 	#--  Convert Markock to Markdown	
 	Convert2Markdown $::FileName  $FileName;   # SourceFile  DestinationFile
 
-	#--  Convert Markdown to HTML
+	#--  Init Convert Markdown to HTML
 	set FileCSS style.css
+	file delete -force $FileName
 
 	#--  Begin Conversion with lowdown if pandoc not installed
 	if { ($::PandocMissing) && !($::LowdownMissing) } {
@@ -197,8 +201,8 @@ proc ExportAsHTML { FileName } {
 						/tmp/export.md -o  $FileName } ErrorVar
 	}; # End pandoc exec
 
-   #-- IF Error found after conversion, stop here
-   if { $ErrorVar ne "" &&  ! [ string match "*WARNING*" $ErrorVar ] } {
+   #-- If Error found after conversion, stop here
+   if { ![file exists $FileName] || $ErrorVar ne "" &&  ! [ string match "*WARNING*" $ErrorVar ] } {
       tk_messageBox -message "ERROR : \n$ErrorVar" -type ok -icon error
       return
    }
@@ -211,6 +215,7 @@ proc ExportAsHTML { FileName } {
 	.fr.t mark set insert 1.0;  # Avoid a bug if insert cursor is on hidden text
 	catch { exec $::BrowserViewer $FileName >& /dev/null &  }
 }
+
 
 
 #==  INCLUDE FILES
