@@ -147,6 +147,6 @@ proc ExportWithPandoc { FileName } {
 	} else {
 		tk_messageBox -message "WARNING / ERROR \n\n  $ErrorVar" -type ok -icon error
 	}
-	if { $ErrorVar ne "" } { puts "== PANDOC Message ==\n $ErrorVar" }
+	if { $ErrorVar ne "" } { puts "== PANDOC Warning  ($FileName)\n $ErrorVar" }
 }
 

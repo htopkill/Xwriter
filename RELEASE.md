@@ -30,3 +30,5 @@ Syntax {{HTML alias}} Text {}  is no more supported. Use ` 'Text'{HTML alias} `
 -  Wrong  italic parsing in some cases
 -  Useless div/span syntax when importing a document
 -  Error with pandoc not correctly reported
+-  Useless extra menu "Conjugate french" if spell language is not french
+

@@ -138,6 +138,8 @@ menu .fr.tb.menuTools.m -tearoff false -background grey90 -foreground grey20 -ac
 if { [ info exists EnableToolbarSpell ] } {
 	.fr.tb.menuTools.m add command -label "  Spell Check" -command {event generate .fr.t <F2>} -accelerator "F2"
 	.fr.tb.menuTools.m add command -label "  Spell Change Language" -command {event generate .fr.t <F3>} -accelerator "F3"
+}
+if { $::CheckSpellLanguage eq "fr" } {
 	.fr.tb.menuTools.m add command -label "  Conjugate (French)" -command {event generate .fr.t <F4>} -accelerator "F4"
 }
 .fr.tb.menuTools.m add command -label "  Force NewLine" -command  { ForceLineBreak} -accelerator "";  # Force 2 trailing spaces at each EOL
