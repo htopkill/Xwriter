@@ -180,15 +180,15 @@ In markdock, formatting inside headers and Headers with "====" / "-----" are not
 
 The table below show the recommendation for header size :  
 
-| Header  | Markdock Size   | HTML5 default Size      
-|:-------:|:---------------:|:-----------------------:|:-----------:|
-|H1 title |    +10pt        |       -                 
-|   H1    |    +6pt         | 2em/24pt                
-|   H2    |    +4pt         | 1.5em/18pt              
-|   H3    |    +2pt         | 1.17em/14pt             
-|   H4    |    Normal       | 16px/1em/12pt (Normal)  
-|   H5    |    Normal       | 10pt                
-|   H6    |    -2pt         | 8pt                 
+| Header  | Markdock Size   | HTML5 default Size
+|:-------:|:---------------:|:-----------------------:|
+|H1 title |    +10pt        |       -
+|   H1    |    +6pt         | 2em/24pt
+|   H2    |    +4pt         | 1.5em/18pt
+|   H3    |    +2pt         | 1.17em/14pt
+|   H4    |    Normal       | 16px/1em/12pt (Normal)
+|   H5    |    Normal       | 10pt
+|   H6    |    -2pt         | 8pt
 
 
 ## Emphasis
@@ -254,7 +254,7 @@ Add tabs to indent the lines as you will do in a plain-text editor
 
 ## Advanced Text Justification
 
-You can use [HTML alias](#HTML alias) to obtain Advanced Text justification on same line :  
+You can use [HTML alias](#html-alias) to obtain Advanced Text justification on same line :  
 Example1 :  
 ```  
 This is left Text and 'Right-JustifyText'{right}  

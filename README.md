@@ -36,8 +36,9 @@ Contact/Discussion :
 +  Open URL and File links  
 +  Table of Contents, Bookmarks  , Recent Files  
 +  Markdown archive with image / encryption  
-+  Syntax highlighting  
++  Code Syntax highlighting    
 +  Diagram editor ( Graphviz )  
++  Pandoc filters [pantcl](https://htmlpreview.github.io/?https://raw.githubusercontent.com/mittelmark/pantcl/master/pantcl.html) for diagram/SQlite/code evaluation and much more  
 +  Multi-language Spelling ( with english custom dictionary )  
 +  UTF-8 compliant / Large Unicode symbols  library
 +  Include / Compare Files  

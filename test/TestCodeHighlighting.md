@@ -2,7 +2,7 @@
 # Test Code Highlighting  
 
 
-The code syntax is highlighted when putting the cursor on the block Code
+The code syntax is highlighted when hovering the code block with mouse
 
 ##  No Language
 ```

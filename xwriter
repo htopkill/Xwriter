@@ -320,10 +320,11 @@ proc ReformatAll { data } {
 	.fr.t replace 1.0 end $data;					# Put raw text ( Format after )
 	set lines [split $data "\n"];					# Array with each line of file
 	set ::CodeLanguage [ string range $::FileExtension 1 4]; # File extention=Code language
+	#set ::status " Loading document ..."
+	#update idletasks
 	#--  Parse Line-By-Line
 	foreach line $lines {
 		incr LineNumber
-		if { $LineNumber eq 80 } { update idletasks }; # Refresh UI after 500 lines (for huge file )
 		switch -glob [string toupper $::FileExtension] {
 			".MD" 	{ catch { ParseLine  $LineNumber $line } }
 			default	{ catch { FormatCodeBlock $::CodeLanguage  $LineNumber $line }}

@@ -167,7 +167,11 @@ if { $::CheckSpellLanguage eq "fr" } {
 	} else { set status " application Pandoc/Graphviz is missing " }
 }
 .fr.tb.menuTools.m add checkbutton -label "  Enable pantcl filters " -variable ::pantclfilter -onvalue 1 -offvalue 0 -command { 
-	set ::status " Pantcl filters: [ string map {0 "OFF" 1 "ON"} $::pantclfilter ] "
+	if { !($PandocMissing)  } {
+		set ::status " Pantcl filters: [ string map {0 "OFF" 1 "ON"} $::pantclfilter ] "
+	} else {
+		tk_messageBox -message " Install 'pandoc' to use this option\n " -type ok -icon error
+	}
 }
 
 

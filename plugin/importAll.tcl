@@ -29,6 +29,7 @@ proc ImportURL { PathLink } {
 		#--  Check URL validity
 		if { [ CheckURL $PathLink ] eq 1 } {
 			tk_messageBox -message " ERROR: Timeout/Header error    \n   Only 'http(s)://...' link allowed \n Retry later\n" -type ok -icon error
+			set ::status ""
 			return
 		}
 		#-- Convert Document
@@ -36,7 +37,7 @@ proc ImportURL { PathLink } {
 		set ImportDir /tmp/pandoc
 		file delete $::ImportFile; file mkdir $ImportDir
 		#--  Start a timeout
-		countdown 60;   # Init a timeout at xx seconds
+		countdown 40;   # Init a timeout at xx seconds
       #-- Start Pandoc  (Get Extentions : pandoc --list-extensions=markdown)
 		#						--wrap=none: Don't wrap after default max column width=72 (pandoc --columns)
    	eval exec pandoc \
@@ -52,6 +53,8 @@ proc ImportURL { PathLink } {
 
 #==  CHECK  URL HEADER validity (4xx/5xx=error)
 proc CheckURL { URL } {
+      set ::status " Checking URL ..."
+      update idletasks
 		set status 0
       catch { set status [ exec  curl -Is --connect-timeout 8  $URL | head -n 1 ] }
 		#update

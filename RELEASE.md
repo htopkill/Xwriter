@@ -1,6 +1,12 @@
  
 # Xwriter V0.4.2  
 
+
+###  WARNING
+
+The next release V0.4.3 will change radically how the setting/preference are loaded/saved   
+It's necessary to enable smooth upgrade in the future, without breaking user-defined preference/themes/shortcut  
+So,  don't change too much the default settings/theme/shortcut and be prepared to re-define your custom settings in the next release  
  
 ### Update Instruction 
 
@@ -12,10 +18,10 @@ Syntax {{HTML alias}} Text {}  is no more supported. Use ` 'Text'{HTML alias} `
 
 ### What's New
 
--  EXPERIMENTAL :  Add pantcl filters (  [Documentation](doc/pantcl/) )
+-  Pandoc Filters  (  [Documentation](doc/pantcl/) )
 -  Improve Table of content if document start directly with a heading2
 -  The toolbar 'c#' button insert a code block if no text selected
--  Code highlighting :  Add vlang (alias v)
+-  Code highlighting :  Add vlang (alias v) 
 
 ###  FIX
 -  Slow downloading of Web image with large documents

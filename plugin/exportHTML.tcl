@@ -173,6 +173,9 @@ proc ExportAsHTML { FileName } {
 	set FileCSS style.css
 	file delete -force $FileName
 
+	#--  Convert Using pantcl markdown converter (very basic)
+	#exec $::ScriptPath/plugin/pantcl.tapp /tmp/export.md  $FileName -s
+
 	#--  Begin Conversion with lowdown if pandoc not installed
 	if { ($::PandocMissing) && !($::LowdownMissing) } {
 		#  --html-hardwrap:  Hard-wrap paragraph content by outputting line breaks

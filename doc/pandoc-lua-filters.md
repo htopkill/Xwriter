@@ -5,6 +5,10 @@ date: 	January 10, 2020
 links :  	https://github.com/topics/pandoc-filter
 ---
 
+#  PANDOC  LUA FILTERS  
+
+
+
 # Introduction
 
 Pandoc has long supported filters, which allow the pandoc abstract syntax tree (AST) to be manipulated between the parsing and the writing phase. [Traditional pandoc filters](https://pandoc.org/filters.html) accept a JSON representation of the pandoc AST and produce an altered JSON representation of the AST. They may be written in any programming language, and invoked from pandoc using the `--filter` option.
@@ -48,7 +52,7 @@ Here's a quick performance comparison, converting the pandoc manual (MANUAL.txt)
 
 As you can see, the Lua filter avoids the substantial overhead associated with marshaling to and from JSON over a pipe.
 
-#  
+
 # Lua filter structure
 
 Lua filters are tables with element names as keys and values consisting of functions acting on those elements.
@@ -305,6 +309,7 @@ variables.
 [LPeg homepage]: http://www.inf.puc-rio.br/~roberto/lpeg/
 [regex engine]: http://www.inf.puc-rio.br/~roberto/lpeg/re.html
 
+
 # Pandoc Module
 
 The `pandoc` Lua module is loaded into the filter's Lua
@@ -344,6 +349,7 @@ Some pandoc functions have been made available in Lua:
 -   the [`pandoc.utils`](#module-pandoc.utils) module contains
     various utility functions.
 
+
 # Lua interpreter initialization
 
 Initialization of pandoc's Lua interpreter can be controlled by
@@ -364,6 +370,7 @@ end
 
 This makes it possible to apply these functions on strings using
 colon syntax (`mystring:uc_upper()`).
+
 
 # Debugging Lua filters
 
@@ -440,6 +447,7 @@ String library is not Unicode aware
     Use the [pandoc.text](#module-text) module for Unicode-aware
     transformation, and consider using using the lpeg or re
     library for pattern matching.
+
 
 # Examples
 
@@ -841,6 +849,7 @@ Example of use:
     }
     \end{tikzpicture}
     EOF
+
 
 # Lua type reference
 
@@ -2370,6 +2379,7 @@ Usage:
 [TableHead]: #type-tablehead
 [Version]: #type-version
 
+
 # Module text
 
 UTF-8 aware text manipulation functions, implemented in Haskell.
@@ -2415,6 +2425,7 @@ Returns the length of a UTF-8 string.
 
 Returns a substring of a UTF-8 string, using Lua's string
 indexing rules.
+
 
 # Module pandoc
 
@@ -3562,6 +3573,7 @@ Usage:
 
 [WriterOptions]: #type-writeroptions
 
+
 # Module pandoc.cli
 
 Command line options and argument parsing.
@@ -3906,6 +3918,7 @@ Usage:
       print('type of metavalue `author`:', pandoc.utils.type(meta.author))
     end
 
+
 # Module pandoc.mediabag
 
 The `pandoc.mediabag` module allows accessing pandoc's media
@@ -4078,6 +4091,7 @@ Usage:
 
     local diagram_url = "https://pandoc.org/diagram.jpg"
     local mt, contents = pandoc.mediabag.fetch(diagram_url)
+
 
 # Module pandoc.List
 
@@ -4280,6 +4294,7 @@ Parameters:
 `comp`
 :   Comparison function as described above.
 
+
 # Module pandoc.format
 
 Information about the formats supported by pandoc.
@@ -4320,6 +4335,7 @@ Parameters:
 Returns:
 
 -   default extensions enabled for `format` (FormatExtensions)
+
 
 # Module pandoc.path
 
@@ -4496,6 +4512,7 @@ Returns:
 
 -   list of directories in search path (list of strings)
 
+
 # Module pandoc.system
 
 Access to system information and functionality.
@@ -4657,6 +4674,7 @@ Parameters:
 Returns:
 
 -   The result(s) of the call to `callback`
+
 
 # Module pandoc.layout
 
@@ -5217,6 +5235,7 @@ Returns
 
 [Doc]: #type-doc
 
+
 # Module pandoc.scaffolding
 
 Scaffolding for custom writers.
@@ -5227,7 +5246,6 @@ A structure to be used as a `Writer` function; the construct
 handles most of the boilerplate, expecting only render functions
 for all AST elements. See the documentation for custom writers for
 details.
-
 
 
 # Module pandoc.template
@@ -5324,6 +5342,7 @@ Returns:
 
 -   template context (table)
 
+
 # Module pandoc.types
 
 Constructors for types which are not part of the pandoc AST.
@@ -5344,6 +5363,7 @@ Parameters:
 Returns:
 
 -   A new [Version] object.
+
 
 # Module pandoc.zip
 

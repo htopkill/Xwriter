@@ -163,7 +163,7 @@ proc FormatSyntaxJAVASCRIPT { RowNum Row } {
 
 proc FormatSyntaxPYTHON { RowNum Row } {
 	FormatSyntaxCommon $RowNum $Row
-	TagCodeAll	Code_Comment	{""".*?"""}  $RowNum; # Block comment
+	TagCodeAll	Code_Comment	{"""[^"]+?"""}  $RowNum; # Block comment
    TagCode	Code_Comment 		{^\s*#.*} 		$Row $RowNum
    TagCode	Code_Comment     	{#.*}	$Row $RowNum; 			#inline comment
 	TagCode  Code_Command      {\y(and|as|assert|break|class|continue|def|del|elif|else|except|exec|False|finally|for|from|global|if|import|in|is|lambda|None|nonlocal|not|or|pass|print|raise|return|True|try|while|with|yield|yield)\y} $Row $RowNum
