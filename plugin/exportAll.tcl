@@ -39,9 +39,9 @@ proc ExportWithPandoc { FileName } {
    foreach line $lines {
 		#puts "DebugExport:   $line"
 
-      #--  Replace ```tcl with ```\{.tcl  eval=false\}  (BUG pandoc filter)
-      #regsub -all -lineanchor {^```tcl} $line {```{.tcl  eval=false} } line
-
+	   #--  Replace ```tcl/dot with ```.tcl/.dot ( prevent pantcl filters evaluation)
+		regsub -all -lineanchor {^```tcl} $Data {```.tcl} Data
+		regsub -all -lineanchor {^```dot} $Data {```.dot} Data
 
       #--  Evaluate if inside codeblock
       if { [ regexp {(^```)(.*?)$} $line ] } {

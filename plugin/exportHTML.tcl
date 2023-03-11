@@ -4,8 +4,6 @@
 
 
 #==  REFORMAT TEXT:  markdock syntax > pure markdown/HTML  syntax
-# WARNING: use <span> (lowdown converter don't convert markdown inside <div>, <p>...)
-
 proc Convert2Markdown { SourceFile  DestFile } {
 
 	#==  INIT
@@ -23,7 +21,8 @@ proc Convert2Markdown { SourceFile  DestFile } {
    #--  Replace list symbol '•' with '*'
 	regsub -all -line  {^(\s*)(?:•)(.*?)} $Data {\1*\2} Data
 
-	#--  Replace ```dot with ```.dot  (ERROR with pantcl filters)
+	#--  Replace ```tcl/dot with ```.tcl/.dot ( prevent pantcl filters evaluation )
+   regsub -all -lineanchor {^```tcl} $Data {```.tcl} Data
    regsub -all -lineanchor {^```dot} $Data {```.dot} Data
 
 	#-- CONVERT markdock>markdown LINE-BY-LINE EXCEPT CODEBLOCK/CODEINLINE
@@ -36,7 +35,6 @@ proc Convert2Markdown { SourceFile  DestFile } {
 		}
 
 		if { ! $CodeBlock } {
-
 
 		   #--  Replace list beginning with TABS by spaces 
 			#    ( better with pandoc parsing for list if no empty line before list )
@@ -190,7 +188,8 @@ proc ExportAsHTML { FileName } {
 	#--  Begin Conversion with pandoc
 	if !($::PandocMissing) {
 		#--  Enable pantcl filters  ( Menu > Tools > Enable pantcl filters )
-		if { $::pantclfilter } { set PantclFilters " --filter $::ScriptPath/plugin/pantcl.tapp"
+		if { $::pantclfilter } {
+			set PantclFilters " --filter $::ScriptPath/plugin/pantcl.tapp"
 		} else { set PantclFilters  "" }
 		#--  Execute Pandoc program
 		# Get Extentions : pandoc --list-extensions=markdown

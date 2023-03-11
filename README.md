@@ -84,7 +84,7 @@ if the font rendering is not good:  `cp  fonts.conf  ~/.config/fontconfig/`  and
 You can also copy fonts in folder 'fonts' to your _home_  folder ~/.fonts  
 
 
-## Limitations / Known Bugs
+##  Limitations / Known Bugs
 
 1.  Application crash if font 'Noto Color Emoji' is selected  
 2.  On Ubuntu  , some features requiring /tmp folder access may not work :  
@@ -92,3 +92,7 @@ You can also copy fonts in folder 'fonts' to your _home_  folder ~/.fonts
 	-  Archive .mdz not working  
 	-  Import URL not working  
 
+
+##  Special thanks
+
+-  To  Detlef Groth, Schwielowsee, Germany for [pantcl filters](https://htmlpreview.github.io/?https://raw.githubusercontent.com/mittelmark/pantcl/master/pantcl.html) 

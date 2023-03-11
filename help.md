@@ -173,7 +173,7 @@ Require application 'pandoc' installed
 
 1. Use pre-defined pandoc filters : [pantcl filters](doc/pantcl/)
 pre-defined filters are disable by default at each start
-Activate pre-defined filters in  Toolbar > ▣ > Enable pantcl filters
+Activate pre-defined filters in  Toolbar > ▣ > Enable pantcl filters and use 'eval=true' in Code block when necessary
 or
 2. Write your own lua filters in ~/.pandoc/filters and enable these filters in Menu > Preferences
 

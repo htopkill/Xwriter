@@ -1,0 +1,5 @@
+graph G {
+  node [shape=box,style=filled,fillcolor=skyblue,
+              color=black,width=0.4,height=0.4];
+          n0 -- n1 -- n2 -- n3 -- n0;
+}

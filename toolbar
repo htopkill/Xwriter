@@ -1,11 +1,12 @@
 #!/usr/bin/wish
 
-package require tooltip;					# For hint display when mouse over button
+package require tooltip;					# For hint display when mouse hover button
 namespace import tooltip::*;				# Import Namespace tooltip
 
 #===  DEFINE TOOLBAR
 frame .fr.tb -bg grey90
-tooltip delay 1000;							# Tooltip delay in milliseconds
+tooltip delay 1000;			# Tooltip delay in milliseconds
+set pantclfilter 0;			# 0: Disable pantcl filter at start
 
 #===  DEFINE TOOLBAR ENTRY WIDGET 
 entry .fr.tb.entry -font DefaultFont   -relief sunken  \
@@ -158,7 +159,8 @@ if { $::CheckSpellLanguage eq "fr" } {
 .fr.tb.menuTools.m add command -label "  Color Picker" -command { .fr.t insert insert [ tk_chooseColor ] }
 .fr.tb.menuTools.m add command -label "  Create graphviz Diagram" -command {
 	if { !($::GraphvizMissing) } {
-     	set FileName [ tk_getOpenFile -initialdir  "$ScriptPath/graphviz" -title "Choose Template" ]
+		set types { {{Files}  { .gv .dot} }  }
+     	set FileName [ tk_getOpenFile -initialdir  "$ScriptPath/template" -filetypes $types -title "Choose Template" ]
 		if { $FileName ne "" } {
 			set UserFile "$::env(HOME)/Documents/Diagram-[clock seconds].gv"
    	   file copy -force $FileName  $UserFile

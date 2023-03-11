@@ -1,4 +1,4 @@
-# Test Speed 3  
+# Test Loading Speed 3  
 
 **Lot of image with resizing**
 

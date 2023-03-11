@@ -78,7 +78,7 @@ bind . <Control-exclam>  { AskUser " "; break};  # Enter command on entry widget
 bind . <Control-g>  { AskUser " GoTo : "; break};
 bind . <Control-f>  {
 	set SearchMode [ dialog_FindReplace .dialog "" ];  # Open dialog window
-	if { $SearchMode eq "" } { return };					#  Nothing to do
+	if { $SearchMode eq "" } { focus .fr.t; break };	#  Nothing to do
 	lassign  $SearchMode  FindStr  ReplaceStr  ModeRegexp  ReplaceAll
 	set LastSearch  [SearchStr $FindStr  $ReplaceStr  $ModeRegexp $ReplaceAll  1.0]
 	#--  Interactive or automatic Find/Replace

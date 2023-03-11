@@ -91,6 +91,7 @@ proc dialog_FindReplace {w title} {
 	entry  $w.replace -textvar _replace  -selectbackground "#DDDDDD"
    checkbutton $w.regexpr -text "Regexp" -variable _regexp
    checkbutton $w.all -text "All"  -variable _all
+	##-- Actions when click on button
 	ttk::button $w.ok -text OK  -command {set _res [list $_find $_replace $_regexp $_all]}
 	ttk::button $w.cancel -text Cancel -command {set _res {}}
 	#--  Place everything now
