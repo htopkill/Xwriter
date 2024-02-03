@@ -11,17 +11,10 @@ Feel free to contribute on github : I still read my github account
 ##  About
 
 Xwriter is a markdown editor for Linux    
-Using an extended markdown syntax ( [Markdock](markdock.md) ) targeting rich-text documents  
+Using an extended markdown syntax targeting rich-text documents  
 
 Contact/Discussion :  
 [ Mastodon ](https://fosstodon.org/@sudokill)  
-
-![main;1200px](screenshot/main.jpg)  
-
- ![main;1200px](screenshot/ThemeDark.jpg)  
-
- ![Name;1200px](screenshot/graphviz.jpg)  
-
 
 
 ##  Features
